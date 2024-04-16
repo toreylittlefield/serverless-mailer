@@ -32,22 +32,16 @@ export const parseInteger = (value: string | undefined): number | undefined => {
 };
 
 export const parseBoolean = (value: string | undefined): boolean | undefined => {
-  const error = new Error(`Invalid boolean value: ${value}`);
-  try {
-    if (typeof value === 'string') {
-      if (value.toLowerCase() === 'true') {
-        return true;
-      } else if (value.toLowerCase() === 'false') {
-        return false;
-      } else {
-        throw error;
-      }
-    }
-
-    if (typeof value === 'boolean') {
-      return value;
-    }
-  } catch (error) {
-    throw error;
+  if (typeof value === 'boolean') {
+    return value;
   }
+
+  if (typeof value === 'string') {
+    const lowVal = value.toLowerCase();
+    if (lowVal === 'true' || lowVal === 'false') {
+      return lowVal === 'true';
+    }
+  }
+
+  throw new Error(`Invalid boolean value: ${value}`);
 };
