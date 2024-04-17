@@ -5,6 +5,7 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
+    "db:create": "node --loader ts-node/esm ./scripts/db.ts",
     "build": "tsc -p . --noEmit false",
     "dev": "node --watch --loader ts-node/esm ./src/index.ts"
   },
