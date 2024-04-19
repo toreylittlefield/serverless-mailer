@@ -13,6 +13,7 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
+    "@libsql/client": "^0.6.0",
     "dotenv": "^16.4.5",
     "nodemailer": "^6.9.13"
   },
