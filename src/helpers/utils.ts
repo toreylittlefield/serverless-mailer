@@ -1,3 +1,5 @@
+import { ENV_VARS } from './constants.js';
+
 export const validateEnvVars = <T extends Record<string, unknown>>(envVars: T) => {
   // check if all the environment variables are defined in the .env file
   const missingVariables = Object.entries(envVars)
@@ -44,4 +46,8 @@ export const parseBoolean = (value: string | undefined): boolean | undefined => 
   }
 
   throw new Error(`Invalid boolean value: ${value}`);
+};
+
+export const isDevelopment = () => {
+  return ENV_VARS.NODE_ENV === 'development';
 };
