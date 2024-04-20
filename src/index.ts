@@ -1,13 +1,13 @@
 import { ENV_VARS } from './helpers/constants.js';
 import { validateEnvVars } from './helpers/utils.js';
-import { client } from './services/dbClient.js';
+import { dbClient } from './services/dbClient.js';
 
 // Validate environment variables before running the application
 validateEnvVars(ENV_VARS);
 
 // create the test item
 const createTemplate = async () => {
-  const result = await client.execute({
+  const result = await dbClient.execute({
     sql: 'INSERT INTO Templates (name, template) VALUES (?, ?)',
     args: ['test-name', 'test-template'],
   });
@@ -16,7 +16,7 @@ const createTemplate = async () => {
 };
 
 const selectTemplate = async () => {
-  const result = await client.execute({
+  const result = await dbClient.execute({
     sql: 'SELECT * FROM Templates WHERE name = ?',
     args: ['test-name'],
   });
@@ -25,7 +25,7 @@ const selectTemplate = async () => {
 };
 
 const deleteTemplate = async () => {
-  const result = await client.execute({
+  const result = await dbClient.execute({
     sql: 'DELETE FROM Templates WHERE name = ?',
     args: ['test-name'],
   });
