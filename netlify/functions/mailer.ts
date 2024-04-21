@@ -1,4 +1,5 @@
 import type { Handler } from '@netlify/functions';
+import { getByIdOrName } from '../lib/crud.js';
 
 export const handler: Handler = async (event, _context) => {
   const { httpMethod, headers } = event;
@@ -8,13 +9,6 @@ export const handler: Handler = async (event, _context) => {
     return {
       statusCode: 200,
       body: '',
-    };
-  }
-
-  if (httpMethod !== 'POST') {
-    return {
-      statusCode: 405,
-      body: JSON.stringify({ message: 'Method Not Allowed' }),
     };
   }
 
@@ -37,8 +31,30 @@ export const handler: Handler = async (event, _context) => {
     };
   }
 
-  return {
-    statusCode: 200,
-    body: JSON.stringify({ message: 'You have access!' }),
-  };
+  const method = httpMethod.toUpperCase();
+
+  switch (method) {
+    case 'GET':
+      return await getByIdOrName(event);
+    case 'POST':
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'You have access!' }),
+      };
+    case 'PUT':
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'You have access!' }),
+      };
+    case 'DELETE':
+      return {
+        statusCode: 200,
+        body: JSON.stringify({ message: 'You have access!' }),
+      };
+    default:
+      return {
+        statusCode: 405,
+        body: JSON.stringify({ message: 'Method Not Allowed' }),
+      };
+  }
 };
