@@ -3,7 +3,7 @@ import { parseBoolean, parseInteger } from './utils.js';
 dotenv.config();
 
 export const ENV_VARS = {
-  NODE_ENV: process.env['NODE_ENV'] as string,
+  // NODE_ENV: process.env['NODE_ENV'] as string,
   NODE_MAILER_USER: process.env['NODE_MAILER_USER'] as string,
   NODE_MAILER_PASS: process.env['NODE_MAILER_PASS'] as string,
   NODE_MAILER_SERVICE: process.env['NODE_MAILER_SERVICE'] as string,
