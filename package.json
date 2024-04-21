@@ -7,7 +7,7 @@
   "scripts": {
     "tsc:src": "tsc -p . --noEmit false",
     "build": "pnpm run env:import:netlify && pnpm run tsc:src",
-    "env:import:netlify": "netlify env:import .env",
+    "env:import:netlify": "netlify env:import .env --replace-existing",
     "coverage": "vitest run --coverage",
     "db:create": "node --loader ts-node/esm ./scripts/db.ts",
     "dev": "node --watch --loader ts-node/esm ./src/index.ts",
