@@ -5,26 +5,34 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "turso:dev": "turso dev",
-    "test": "vitest --config vitest.config.ts",
+    "build": "tsc -p . --noEmit false",
     "coverage": "vitest run --coverage",
     "db:create": "node --loader ts-node/esm ./scripts/db.ts",
-    "build": "tsc -p . --noEmit false",
-    "dev": "node --watch --loader ts-node/esm ./src/index.ts"
+    "dev": "node --watch --loader ts-node/esm ./src/index.ts",
+    "netlify:dev": "BROWSER=none netlify dev",
+    "netlify:functions:serve": "BROWSER=none netlify functions:serve",
+    "netlify:serve": "BROWSER=none netlify serve",
+    "test": "concurrently 'pnpm run netlify:functions:serve' 'wait-on --config wait-on-config.cjs && pnpm run test' --kill-others --success first",
+    "vitest": "vitest --config vitest.config.ts",
+    "turso:dev": "turso dev"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "dependencies": {
     "@libsql/client": "^0.6.0",
+    "@netlify/functions": "^2.6.0",
     "dotenv": "^16.4.5",
     "nodemailer": "^6.9.13"
   },
   "devDependencies": {
     "@types/nodemailer": "^6.4.14",
+    "@types/wait-on": "^5.3.4",
+    "concurrently": "^8.2.2",
     "netlify-cli": "^17.22.1",
     "ts-node": "^10.9.2",
     "typescript": "^5.4.3",
-    "vitest": "^1.5.0"
+    "vitest": "^1.5.0",
+    "wait-on": "^7.2.0"
   }
 }
