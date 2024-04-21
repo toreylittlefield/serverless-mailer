@@ -1,8 +1,5 @@
 import nodemailer from 'nodemailer';
-import fs from 'node:fs/promises';
 import { ENV_VARS } from '../helpers/constants.js';
-
-const htmlTemplate = await fs.readFile('./src/index.html', 'utf8');
 
 const replaceSecret = (html: string, secret: string) => {
   return html.replace('{{ SECRET_PLACEHOLDER }}', secret);
@@ -21,7 +18,7 @@ const transporter = nodemailer.createTransport({
 });
 
 // async..await is not allowed in global scope, must use a wrapper
-export const sendEmail = async () => {
+export const sendEmail = async (htmlTemplate: string) => {
   // send mail with defined transport object
   const info = await transporter.sendMail({
     from: ENV_VARS.NODE_MAILER_FROM, // sender address
