@@ -1,4 +1,4 @@
-import { createClient } from '@libsql/client';
+import { createClient } from '@libsql/client/web';
 import { ENV_VARS } from '../helpers/constants.js';
 
 // console.log(`Running in ${ENV_VARS.NODE_ENV} environment`);
