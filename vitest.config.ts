@@ -5,8 +5,8 @@ export default defineConfig({
     // ...
     include: ['**/*.{test,spec}.?(c|m)[jt]s?(x)'],
     // TODO: add test database connection
-    // env: {
-    //   NODE_ENV: 'test',
-    // },
+    env: {
+      NODE_ENV: 'test',
+    },
   },
 });
