@@ -5,7 +5,9 @@
   "main": "index.js",
   "type": "module",
   "scripts": {
-    "build": "tsc -p . --noEmit false",
+    "tsc:src": "tsc -p . --noEmit false",
+    "build": "pnpm run env:import:netlify && pnpm run tsc:src",
+    "env:import:netlify": "netlify env:import .env",
     "coverage": "vitest run --coverage",
     "db:create": "node --loader ts-node/esm ./scripts/db.ts",
     "dev": "node --watch --loader ts-node/esm ./src/index.ts",
