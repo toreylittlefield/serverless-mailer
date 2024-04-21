@@ -1,7 +1,7 @@
 import { createClient } from '@libsql/client';
 import { ENV_VARS } from '../helpers/constants.js';
 
-console.log(`Running in ${ENV_VARS.NODE_ENV} environment`);
+// console.log(`Running in ${ENV_VARS.NODE_ENV} environment`);
 console.dir(ENV_VARS);
 // TODO: setup a testing environment
 const dbClient = createClient({
