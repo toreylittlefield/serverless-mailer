@@ -12,9 +12,9 @@
     "netlify:dev": "BROWSER=none netlify dev",
     "netlify:functions:serve": "BROWSER=none netlify functions:serve",
     "netlify:serve": "BROWSER=none netlify serve",
-    "test": "concurrently 'pnpm run netlify:functions:serve' 'wait-on --config wait-on-config.cjs && pnpm run test' --kill-others --success first",
-    "vitest": "vitest --config vitest.config.ts",
-    "turso:dev": "turso dev"
+    "test": "concurrently 'pnpm run netlify:functions:serve' 'wait-on --config wait-on-config.cjs && pnpm run vitest' --kill-others --success first",
+    "turso:dev": "turso dev",
+    "vitest": "vitest --config vitest.config.ts"
   },
   "keywords": [],
   "author": "",
