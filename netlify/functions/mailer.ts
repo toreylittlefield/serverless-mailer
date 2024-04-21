@@ -13,7 +13,7 @@ export const handler: Handler = async (event, _context) => {
   }
 
   const requestKey = headers['x-api-key'];
-  const apiKey = Netlify.env.get('API_KEY');
+  const apiKey = process.env['API_KEY'];
 
   // Check if the API key is set in the environment
   if (!apiKey) {
