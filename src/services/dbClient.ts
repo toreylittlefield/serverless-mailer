@@ -1,9 +1,12 @@
 import { createClient } from '@libsql/client';
 import { ENV_VARS } from '../helpers/constants.js';
 
+console.log(`Running in ${ENV_VARS.NODE_ENV} environment`);
+console.dir(ENV_VARS);
 // TODO: setup a testing environment
 const dbClient = createClient({
-  url: ENV_VARS.NODE_ENV === 'test' ? 'http://127.0.0.1:8081' : 'ENV_VARS.TURSO_DATABASE_URL',
+  // url: ENV_VARS.NODE_ENV === 'test' ? 'http://127.0.0.1:8081' : ENV_VARS.TURSO_DATABASE_URL,
+  url: ENV_VARS.TURSO_DATABASE_URL,
   authToken: ENV_VARS.TURSO_AUTH_TOKEN,
 });
 
