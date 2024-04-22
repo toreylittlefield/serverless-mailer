@@ -1,5 +1,8 @@
 import type { Handler } from '@netlify/functions';
-import { getByIdOrName } from '../lib/crud.js';
+import { deleteByIdOrName, getByIdOrName, postCreateTemplate, putByIdOrName } from '../lib/crud.js';
+/**
+ * function for CRUD operations on a template
+ */
 
 export const handler: Handler = async (event, _context) => {
   const { httpMethod, headers } = event;
@@ -37,20 +40,11 @@ export const handler: Handler = async (event, _context) => {
     case 'GET':
       return await getByIdOrName(event);
     case 'POST':
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'You have access!' }),
-      };
+      return await postCreateTemplate(event);
     case 'PUT':
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'You have access!' }),
-      };
+      return await putByIdOrName(event);
     case 'DELETE':
-      return {
-        statusCode: 200,
-        body: JSON.stringify({ message: 'You have access!' }),
-      };
+      return await deleteByIdOrName(event);
     default:
       return {
         statusCode: 405,
