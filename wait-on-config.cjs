@@ -1,11 +1,12 @@
 //@ts-check
 require('dotenv').config();
 
+const FUNCTION_NAME = 'template';
 // NOTE: 9999 is the default port for netlify dev , see the netlify.toml file
 const PORT = process.env.PORT || 9999;
 // const IS_TEST = process.env.NODE_ENV === 'test';
 const URL = process.env['URL'] || `http://localhost:${PORT}`;
-const RESOURCE = `${URL}/.netlify/functions/mailer`;
+const RESOURCE = `${URL}/.netlify/functions/${FUNCTION_NAME}`;
 
 const opts = {
   resources: [RESOURCE],
