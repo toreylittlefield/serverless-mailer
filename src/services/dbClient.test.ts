@@ -1,7 +1,7 @@
 /**
  * test for crud operations on dbClient
  */
-import { afterEach, beforeEach, describe, expect, test } from 'vitest';
+import { afterAll, afterEach, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import type { Template, TemplateInput } from '../helpers/types.js';
 import {
   createTemplate,
@@ -28,6 +28,16 @@ const TEST_TEMPLATE_INPUT = {
 let TEST_TEMPLATE_RECORD: Partial<Template> = {
   ...TEST_TEMPLATE_INPUT,
 };
+
+beforeAll(async () => {
+  // delete test data from the database
+  await deleteTemplateByName(TEST_TEMPLATE_INPUT.name);
+});
+
+afterAll(async () => {
+  // delete test data from the database
+  await deleteTemplateByName(TEST_TEMPLATE_INPUT.name);
+});
 
 beforeEach(async () => {
   // TODO: clear the test database

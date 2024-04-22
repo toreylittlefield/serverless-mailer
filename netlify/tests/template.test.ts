@@ -1,7 +1,7 @@
 import dotenv from 'dotenv';
 dotenv.config();
 
-import { afterAll, beforeEach, describe, expect, test } from 'vitest';
+import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import type { Template } from '../../src/index.js';
 import {
   deleteById,
@@ -30,6 +30,16 @@ let TEST_TEMPLATE_RECORD = {
   ...TEST_TEMPLATE_INPUT,
 } as Template;
 
+beforeAll(async () => {
+  // delete test data from the database
+  await deleteByName(TEST_TEMPLATE_INPUT.name);
+});
+
+afterAll(async () => {
+  // delete test data from the database
+  await deleteByName(TEST_TEMPLATE_INPUT.name);
+});
+
 beforeEach(async () => {
   // delete test data from the database
   await deleteByName(TEST_TEMPLATE_INPUT.name);
@@ -52,11 +62,6 @@ beforeEach(async () => {
   TEST_TEMPLATE_RECORD = {
     ...row,
   };
-});
-
-afterAll(async () => {
-  // delete test data from the database
-  await deleteByName(TEST_TEMPLATE_INPUT.name);
 });
 
 describe.sequential('mailer', () => {
