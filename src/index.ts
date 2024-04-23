@@ -1,6 +1,6 @@
 import { ENV_VARS } from './helpers/constants.js';
 import { validateEnvVars } from './helpers/utils.js';
-import { sendEmail } from './services/nodeMailer.js';
+import { type SendEmailParams, sendEmail } from './services/nodeMailer.js';
 import type { Template, TemplateInput, Results } from './helpers/types.js';
 import {
   getTemplateByName,
@@ -15,7 +15,7 @@ import {
 // Validate environment variables before running the application
 validateEnvVars(ENV_VARS);
 
-export type { Template, TemplateInput, Results };
+export type { Template, TemplateInput, Results, SendEmailParams };
 
 export {
   sendEmail,
