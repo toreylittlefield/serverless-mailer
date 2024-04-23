@@ -1,8 +1,12 @@
 import type { ResultSet } from '@libsql/client';
 
-type Prettify<T> = {
+export type Prettify<T> = {
   [K in keyof T]: T[K];
 } & {};
+
+export type RemoveOptional<T> = {
+  [K in keyof T]-?: T[K];
+};
 
 /**
  * table schema
