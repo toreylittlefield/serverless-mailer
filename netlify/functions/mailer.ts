@@ -7,7 +7,7 @@ const validateBody = (body: string | null): (Record<'html', string> & Partial<Se
       throw new Error('No body provided');
     }
     const json = JSON.parse(body);
-    if ('html' in json && typeof json.template === 'string') {
+    if ('html' in json && typeof json.html === 'string') {
       return json;
     }
   } catch (error) {
@@ -52,6 +52,7 @@ export const handler: Handler = async (event, _context) => {
   switch (method) {
     case 'POST':
       const bodyData = validateBody(body);
+      console.log('bodyData', bodyData);
       // Check if the body has the required fields
       if (!bodyData?.html) {
         return {
@@ -60,7 +61,7 @@ export const handler: Handler = async (event, _context) => {
         };
       }
       const res = await sendEmail(bodyData);
-      if (res.accepted) {
+      if (res.response.includes('250')) {
         return {
           statusCode: 200,
           body: JSON.stringify({ data: res }),
