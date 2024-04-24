@@ -4,10 +4,10 @@ dotenv.config();
 import { afterAll, beforeAll, beforeEach, describe, expect, test } from 'vitest';
 import type { Template } from '../../src/index.js';
 import {
-  deleteById,
-  deleteByName,
-  getById,
-  getByName,
+  deleteTemplateById,
+  deleteTemplateByName,
+  getTemplateById,
+  getTemplateByName,
   postTemplate,
   putTemplateById,
   putTemplateByName,
@@ -32,17 +32,17 @@ let TEST_TEMPLATE_RECORD = {
 
 beforeAll(async () => {
   // delete test data from the database
-  await deleteByName(TEST_TEMPLATE_INPUT.name);
+  await deleteTemplateByName(TEST_TEMPLATE_INPUT.name);
 });
 
 afterAll(async () => {
   // delete test data from the database
-  await deleteByName(TEST_TEMPLATE_INPUT.name);
+  await deleteTemplateByName(TEST_TEMPLATE_INPUT.name);
 });
 
 beforeEach(async () => {
   // delete test data from the database
-  await deleteByName(TEST_TEMPLATE_INPUT.name);
+  await deleteTemplateByName(TEST_TEMPLATE_INPUT.name);
 
   // reset the test data
   TEST_TEMPLATE_RECORD = {
@@ -53,7 +53,7 @@ beforeEach(async () => {
   await postTemplate(TEST_TEMPLATE_INPUT.name, TEST_TEMPLATE_INPUT.template);
 
   // get the test data from the database
-  const res = await getByName(TEST_TEMPLATE_INPUT.name);
+  const res = await getTemplateByName(TEST_TEMPLATE_INPUT.name);
   const row = res?.rows?.at(0);
   if (!row) {
     throw new Error('Test data not found');
@@ -64,14 +64,14 @@ beforeEach(async () => {
   };
 });
 
-describe.sequential('mailer', () => {
+describe('template', () => {
   test('should create an template', async () => {
     // already tested in beforeEach
     expect(TEST_TEMPLATE_RECORD.id).toBeDefined();
   });
 
   test('should get an template by name', async () => {
-    const res = await getByName(TEST_TEMPLATE_INPUT.name);
+    const res = await getTemplateByName(TEST_TEMPLATE_INPUT.name);
     const row = res?.rows?.at(0);
     expect(row?.name).toEqual(TEST_TEMPLATE_INPUT.name);
     expect(row?.template).toEqual(TEST_TEMPLATE_INPUT.template);
@@ -81,15 +81,15 @@ describe.sequential('mailer', () => {
     if (!TEST_TEMPLATE_RECORD.id) {
       throw new Error('Test data not found');
     }
-    const res = await getById(TEST_TEMPLATE_RECORD.id.toString());
+    const res = await getTemplateById(TEST_TEMPLATE_RECORD.id.toString());
     const row = res?.rows?.at(0);
     expect(row?.name).toEqual(TEST_TEMPLATE_INPUT.name);
     expect(row?.template).toEqual(TEST_TEMPLATE_INPUT.template);
   });
 
   test('should delete a template by name', async () => {
-    await deleteByName(TEST_TEMPLATE_INPUT.name);
-    const res = await getByName(TEST_TEMPLATE_INPUT.name);
+    await deleteTemplateByName(TEST_TEMPLATE_INPUT.name);
+    const res = await getTemplateByName(TEST_TEMPLATE_INPUT.name);
     expect(res?.rows?.length).toEqual(0);
   });
 
@@ -97,9 +97,9 @@ describe.sequential('mailer', () => {
     if (!TEST_TEMPLATE_RECORD.id) {
       throw new Error('Test data not found');
     }
-    await deleteById(TEST_TEMPLATE_RECORD.id.toString());
+    await deleteTemplateById(TEST_TEMPLATE_RECORD.id.toString());
 
-    const res = await getByName(TEST_TEMPLATE_INPUT.name);
+    const res = await getTemplateByName(TEST_TEMPLATE_INPUT.name);
     expect(res?.rows?.length).toEqual(0);
   });
 
@@ -107,7 +107,7 @@ describe.sequential('mailer', () => {
     const updatedTemplate = 'updated template';
     await putTemplateByName(TEST_TEMPLATE_INPUT.name, updatedTemplate);
 
-    const res = await getByName(TEST_TEMPLATE_INPUT.name);
+    const res = await getTemplateByName(TEST_TEMPLATE_INPUT.name);
     const row = res?.rows?.at(0);
     expect(row?.name).toEqual(TEST_TEMPLATE_INPUT.name);
     expect(row?.template).toEqual(updatedTemplate);
@@ -120,7 +120,7 @@ describe.sequential('mailer', () => {
     const updatedTemplate = 'updated template';
     await putTemplateById(TEST_TEMPLATE_RECORD.id.toString(), updatedTemplate);
 
-    const res = await getByName(TEST_TEMPLATE_INPUT.name);
+    const res = await getTemplateByName(TEST_TEMPLATE_INPUT.name);
     const row = res?.rows?.at(0);
     expect(row?.name).toEqual(TEST_TEMPLATE_INPUT.name);
     expect(row?.template).toEqual(updatedTemplate);
