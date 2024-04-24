@@ -1,4 +1,4 @@
-import type { Results } from '../../src/index.js';
+import type { Results, SendEmailParams } from '../../src/index.js';
 
 type Method = 'GET' | 'POST' | 'PUT' | 'DELETE';
 
@@ -9,7 +9,7 @@ type Template = {
 };
 
 type CreateRequestParams = {
-  body?: Template;
+  body?: Template | SendEmailParams | undefined;
   headers: Headers;
   method: Method;
   url: URL | string;
@@ -54,7 +54,7 @@ const createUrl = (functionName: FunctionName = FUNCTION_NAME.template) => {
   return url;
 };
 
-const deleteByName = async (name: string): Promise<Results> => {
+const deleteTemplateByName = async (name: string): Promise<Results> => {
   const url = createUrl();
   url.searchParams.set('name', name);
   const headers = createHeaders();
@@ -62,7 +62,7 @@ const deleteByName = async (name: string): Promise<Results> => {
   const response = await fetch(request);
   return (await response.json()) as Results;
 };
-const deleteById = async (id: string): Promise<Results> => {
+const deleteTemplateById = async (id: string): Promise<Results> => {
   const url = createUrl();
   url.searchParams.set('id', id);
   const headers = createHeaders();
@@ -71,7 +71,7 @@ const deleteById = async (id: string): Promise<Results> => {
   return (await response.json()) as Results;
 };
 
-const getById = async (id: string): Promise<Results> => {
+const getTemplateById = async (id: string): Promise<Results> => {
   const url = createUrl();
   url.searchParams.set('id', id);
   const headers = createHeaders();
@@ -79,7 +79,7 @@ const getById = async (id: string): Promise<Results> => {
   const response = await fetch(request);
   return (await response.json()) as Results;
 };
-const getByName = async (name: string): Promise<Results> => {
+const getTemplateByName = async (name: string): Promise<Results> => {
   const url = createUrl();
   url.searchParams.set('name', name);
   const headers = createHeaders();
@@ -110,4 +110,44 @@ const putTemplateById = async (id: string, template: string): Promise<Results> =
   return (await response.json()) as Results;
 };
 
-export { deleteByName, deleteById, getById, getByName, postTemplate, putTemplateByName, putTemplateById };
+/**
+ * for send email function
+ */
+type SendEmailRequestParams = {
+  body?: SendEmailParams;
+  method?: Method;
+  headers?: Headers;
+};
+const sendEmailRequest = async <TData>({
+  body,
+  headers,
+  method = 'POST',
+}: SendEmailRequestParams): Promise<{
+  status: number;
+  data: TData;
+}> => {
+  const url = createUrl(FUNCTION_NAME.mailer);
+  const mergedHeaders = createHeaders();
+  if (headers) {
+    headers.forEach((value, key) => {
+      mergedHeaders.set(key, value);
+    });
+  }
+  const request = createRequest({ method: method, headers: mergedHeaders, url, body });
+  const response = await fetch(request);
+  return {
+    status: response.status,
+    data: (await response.json()) as TData,
+  };
+};
+
+export {
+  deleteTemplateByName,
+  deleteTemplateById,
+  getTemplateById,
+  getTemplateByName,
+  postTemplate,
+  putTemplateByName,
+  putTemplateById,
+  sendEmailRequest,
+};
