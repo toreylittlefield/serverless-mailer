@@ -17,6 +17,10 @@ const validateBody = (body: string | null): (Record<'html', string> & Partial<Se
   }
 };
 
+export type SuccessMailerResponse = {
+  data: Awaited<ReturnType<typeof sendEmail>>;
+};
+
 export const handler: Handler = async (event, _context) => {
   const { body, httpMethod, headers } = event;
 
