@@ -1,5 +1,27 @@
 import type { Handler } from '@netlify/functions';
 import { SendEmailParams, sendEmail } from '../../src/index.js';
+import { ENV_VARS } from '../../src/helpers/constants.js';
+import { SendMailOptions } from 'nodemailer';
+
+// NOTE: remove any to field from the body so that emails are not sent to unintended recipients
+const receiptAllowList = [ENV_VARS.NODE_MAILER_TO, ENV_VARS.NODE_MAILER_FROM];
+console.dir(receiptAllowList);
+
+const allowListFilter = (to: SendMailOptions['to']): string | string[] | undefined => {
+  if (Array.isArray(to)) {
+    const allowed = to.filter((email) => receiptAllowList.includes(email.toString())).map((email) => email.toString());
+    return allowed.length > 0 ? allowed : undefined;
+  }
+  if (typeof to === 'string') {
+    return receiptAllowList.includes(to) ? to : undefined;
+  }
+};
+
+const deleteKeyIfPresent = <T extends Record<string, unknown>>(key: keyof T, obj: T): void => {
+  if (key in obj) {
+    delete obj[key];
+  }
+};
 
 const validateBody = (body: string | null): (Record<'html', string> & Partial<SendEmailParams>) | undefined => {
   try {
@@ -7,7 +29,19 @@ const validateBody = (body: string | null): (Record<'html', string> & Partial<Se
       throw new Error('No body provided');
     }
     const json = JSON.parse(body);
+
     if ('html' in json && typeof json.html === 'string') {
+      if ('to' in json) {
+        // check if 'to' is in the body and apply the allowListFilter
+        const allowed = allowListFilter(json.to);
+        if (allowed) {
+          return { ...json, to: allowed };
+        }
+      }
+      // if not allowed, remove the 'to' field to prevent sending emails to unintended recipients
+      deleteKeyIfPresent('to', json);
+      // do not allow 'from' field to be modified
+      deleteKeyIfPresent('from', json);
       return json;
     }
   } catch (error) {
