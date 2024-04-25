@@ -11,3 +11,6 @@ dist
 node_modules
 # Local Netlify folder
 .netlify
+
+# vitest 
+coverage

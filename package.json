@@ -14,6 +14,7 @@
     "netlify:dev": "BROWSER=none netlify dev",
     "netlify:functions:serve": "BROWSER=none netlify functions:serve",
     "netlify:serve": "BROWSER=none netlify serve",
+    "test:coverage": "concurrently 'pnpm run netlify:functions:serve' 'wait-on --config wait-on-config.cjs && pnpm run coverage' --kill-others --success first",
     "test": "concurrently 'pnpm run netlify:functions:serve' 'wait-on --config wait-on-config.cjs && pnpm run vitest' --kill-others --success first",
     "turso:dev": "turso dev",
     "vitest": "vitest --config vitest.config.ts"
@@ -30,6 +31,7 @@
   "devDependencies": {
     "@types/nodemailer": "^6.4.14",
     "@types/wait-on": "^5.3.4",
+    "@vitest/coverage-v8": "^1.5.2",
     "concurrently": "^8.2.2",
     "netlify-cli": "^17.22.1",
     "ts-node": "^10.9.2",
