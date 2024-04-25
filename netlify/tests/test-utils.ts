@@ -123,8 +123,8 @@ const sendEmailRequest = async <TData>({
   headers,
   method = 'POST',
 }: SendEmailRequestParams): Promise<{
-  status: number;
   data: TData;
+  status: number;
 }> => {
   const url = createUrl(FUNCTION_NAME.mailer);
   const mergedHeaders = createHeaders();
@@ -135,9 +135,10 @@ const sendEmailRequest = async <TData>({
   }
   const request = createRequest({ method: method, headers: mergedHeaders, url, body });
   const response = await fetch(request);
+  const json = (await response.json()) as TData;
   return {
     status: response.status,
-    data: (await response.json()) as TData,
+    data: json,
   };
 };
 
