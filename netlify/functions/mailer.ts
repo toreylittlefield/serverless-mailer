@@ -5,7 +5,6 @@ import { SendMailOptions } from 'nodemailer';
 
 // NOTE: remove any to field from the body so that emails are not sent to unintended recipients
 const receiptAllowList = [ENV_VARS.NODE_MAILER_TO, ENV_VARS.NODE_MAILER_FROM];
-console.dir(receiptAllowList);
 
 const allowListFilter = (to: SendMailOptions['to']): string | string[] | undefined => {
   if (Array.isArray(to)) {
@@ -17,32 +16,49 @@ const allowListFilter = (to: SendMailOptions['to']): string | string[] | undefin
   }
 };
 
+const validateRecipientsParams = (params: SendEmailParams): Pick<SendEmailParams, 'to' | 'cc' | 'bcc'> => {
+  const { to, cc, bcc } = params;
+  const allowedTo = allowListFilter(to);
+  const allowedCc = allowListFilter(cc);
+  const allowedBcc = allowListFilter(bcc);
+  return {
+    to: allowedTo,
+    cc: allowedCc,
+    bcc: allowedBcc,
+  };
+};
+
 const deleteKeyIfPresent = <T extends Record<string, unknown>>(key: keyof T, obj: T): void => {
   if (key in obj) {
     delete obj[key];
   }
 };
 
-const validateBody = (body: string | null): (Record<'html', string> & Partial<SendEmailParams>) | undefined => {
+export const validateBody = (body: string | null): (Record<'html', string> & Partial<SendEmailParams>) | undefined => {
   try {
     if (!body) {
       throw new Error('No body provided');
     }
-    const json = JSON.parse(body);
+    const sendEmailParams = JSON.parse(body);
 
-    if ('html' in json && typeof json.html === 'string') {
-      if ('to' in json) {
-        // check if 'to' is in the body and apply the allowListFilter
-        const allowed = allowListFilter(json.to);
-        if (allowed) {
-          return { ...json, to: allowed };
-        }
+    if ('html' in sendEmailParams && typeof sendEmailParams.html === 'string') {
+      // validate recipients with allowListFilter
+      const { to, cc, bcc } = validateRecipientsParams(sendEmailParams);
+
+      // remove any unintended recipients from the payload
+      if (!to) {
+        deleteKeyIfPresent('to', sendEmailParams);
       }
-      // if not allowed, remove the 'to' field to prevent sending emails to unintended recipients
-      deleteKeyIfPresent('to', json);
-      // do not allow 'from' field to be modified
-      deleteKeyIfPresent('from', json);
-      return json;
+      if (!cc) {
+        deleteKeyIfPresent('cc', sendEmailParams);
+      }
+      if (!bcc) {
+        deleteKeyIfPresent('bcc', sendEmailParams);
+      }
+
+      // never allow 'from' field to be modified
+      deleteKeyIfPresent('from', sendEmailParams);
+      return sendEmailParams;
     }
   } catch (error) {
     console.error(error);
